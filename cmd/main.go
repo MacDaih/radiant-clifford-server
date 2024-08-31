@@ -31,7 +31,7 @@ func main() {
 	log.Println("Starting webservice")
 
 	repo := repository.NewReportRepository(config.GetDBEnv())
-	//cltr := collector.NewCollector(repo)
+
 	hdlr := handler.NewServiceHandler(repo)
 
 	httpError := make(chan error, 1)
@@ -53,8 +53,8 @@ func main() {
 	client := sdk.NewClient(
 		config.GetServerAddr(),
 		15,
-		sdk.WithID("96385172-0275-4baf-9208-9d19fc471669"),
-		sdk.WithBasicCredentials("test", "test"),
+		sdk.WithID(config.GetClientID()),
+		sdk.WithBasicCredentials(config.GetUserName(), config.GetUserPasswd()),
 		sdk.WithCallBack(
 			func(payload []byte) error {
 				var wd map[string]interface{}
@@ -68,7 +68,7 @@ func main() {
 	)
 
 	// TODO pass it through config
-	consumer := worker.NewConsumer(client, []string{"outside/weather"})
+	consumer := worker.NewConsumer(client, config.GetTopics())
 
 	go func(cerr chan error) {
 		cerr <- consumer.Run(appCTX)
