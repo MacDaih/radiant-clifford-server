@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -12,9 +10,9 @@ import (
 	"time"
 
 	"webservice/config"
-	//"webservice/internal/collector"
 	"webservice/internal/handler"
 	"webservice/internal/repository"
+	"webservice/internal/service"
 
 	"webservice/cmd/server"
 	"webservice/cmd/worker"
@@ -28,10 +26,11 @@ func main() {
 	appCTX, shutdown := context.WithCancel(context.Background())
 	config.Boot()
 
-	log.Println("Starting webservice")
+	log.Println("starting webservice")
 
 	repo := repository.NewReportRepository(config.GetDBEnv())
 
+	recordReport := service.RecordReportFunc(repo)
 	hdlr := handler.NewServiceHandler(repo)
 
 	httpError := make(chan error, 1)
@@ -56,18 +55,10 @@ func main() {
 		sdk.WithID(config.GetClientID()),
 		sdk.WithBasicCredentials(config.GetUserName(), config.GetUserPasswd()),
 		sdk.WithCallBack(
-			func(payload []byte) error {
-				var wd map[string]interface{}
-				if err := json.Unmarshal(payload, &wd); err != nil {
-					return err
-				}
-				fmt.Printf("temp = %6.2f\n", wd["temperature"].(float64))
-				return nil
-			},
+			recordReport,
 		),
 	)
 
-	// TODO pass it through config
 	consumer := worker.NewConsumer(client, config.GetTopics())
 
 	go func(cerr chan error) {

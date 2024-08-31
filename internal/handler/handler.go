@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"webservice/internal/domain"
+	"webservice/internal/core/domain"
 	"webservice/internal/repository"
 
 	"github.com/gorilla/mux"
@@ -19,7 +19,7 @@ func enableCors(w *http.ResponseWriter) {
 }
 
 type serviceHandler struct {
-	repository repository.Repository
+	repository repository.Report
 }
 
 type Handler interface {
@@ -27,7 +27,7 @@ type Handler interface {
 	GetReportsByDate(w http.ResponseWriter, r *http.Request)
 }
 
-func NewServiceHandler(repository repository.Repository) Handler {
+func NewServiceHandler(repository repository.Report) Handler {
 	return &serviceHandler{
 		repository: repository,
 	}
@@ -43,7 +43,7 @@ func (s *serviceHandler) GetReportsFrom(w http.ResponseWriter, r *http.Request) 
 	if v, ok := params["range"]; !ok {
 		log.Println("report handler err : called for reports with no time range")
 		w.WriteHeader(http.StatusBadRequest)
-        return
+		return
 	} else {
 		rge = domain.ToStamp(v)
 	}
@@ -54,7 +54,7 @@ func (s *serviceHandler) GetReportsFrom(w http.ResponseWriter, r *http.Request) 
 	if err != nil {
 		log.Println("report handler err : ", err)
 		w.WriteHeader(http.StatusServiceUnavailable)
-        return
+		return
 	}
 
 	sample := domain.FormatSample(reports)
@@ -69,7 +69,7 @@ func (s *serviceHandler) GetReportsByDate(w http.ResponseWriter, r *http.Request
 	if v, ok := params["date"]; !ok {
 		log.Println("report handler err : called for reports with no date")
 		w.WriteHeader(http.StatusBadRequest)
-        return
+		return
 	} else {
 		p := strings.Split(v, "-")
 		if len(p) != 3 {

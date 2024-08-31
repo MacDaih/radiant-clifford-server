@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"webservice/internal/domain"
+	"webservice/internal/core/domain"
 	"webservice/pkg/database"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -15,7 +15,7 @@ const (
 	archiveCollection = "archive"
 )
 
-type Repository interface {
+type Report interface {
 	GetReports(context.Context, int64) ([]domain.Report, error)
 	GetReportsFromRange(context.Context, domain.TimeRange) ([]domain.Report, error)
 	InsertReport(context.Context, domain.Report) error
@@ -31,7 +31,7 @@ type reportsRepo struct {
 	dbPort string
 }
 
-func NewReportRepository(name, dbHost, dbPort string) Repository {
+func NewReportRepository(name, dbHost, dbPort string) Report {
 	return &reportsRepo{
 		dbname: name,
 		dbHost: dbHost,
