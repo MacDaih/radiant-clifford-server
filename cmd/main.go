@@ -34,7 +34,6 @@ func main() {
 	hdlr := handler.NewServiceHandler(repo)
 
 	httpError := make(chan error, 1)
-	workerErr := make(chan error, 1)
 	sysInt := make(chan os.Signal, 1)
 
 	router := mux.NewRouter()
@@ -59,11 +58,12 @@ func main() {
 		),
 	)
 
+	log.Println(config.GetTopics())
 	consumer := worker.NewConsumer(client, config.GetTopics())
 
-	go func(cerr chan error) {
-		cerr <- consumer.Run(appCTX)
-	}(workerErr)
+	go func() {
+		consumer.Run(appCTX)
+	}()
 
 	signal.Notify(sysInt, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
 
@@ -72,11 +72,6 @@ func main() {
 		shutdown()
 		if err != nil {
 			log.Fatalf("http Server error : %s", err.Error())
-		}
-	case err := <-workerErr:
-		shutdown()
-		if err != nil {
-			log.Fatalf("data collector error : %s", err.Error())
 		}
 	case <-sysInt:
 		shutdown()

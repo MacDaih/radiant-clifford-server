@@ -47,6 +47,7 @@ func Boot() {
 	cfg.clientID = setValue("CLIENT_ID")
 	cfg.userName = setValue("USER_NAME")
 	cfg.pwd = setValue("PASSWORD")
+	cfg.topics = setValues("TOPICS")
 
 	cfg.dbName = setValue("DB_NAME")
 	cfg.dbHost = setValue("DB_HOST")

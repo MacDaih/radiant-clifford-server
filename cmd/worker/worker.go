@@ -3,6 +3,7 @@ package worker
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	sdk "github.com/macdaih/porter_go_sdk"
@@ -20,8 +21,7 @@ func NewConsumer(client *sdk.PorterClient, topics []string) *Consumer {
 	}
 }
 
-func (c *Consumer) Run(ctx context.Context) error {
-	cerr := make(chan error, 1)
+func (c *Consumer) Run(ctx context.Context) {
 
 	sub := func() error {
 		return c.client.Subscribe(ctx, c.topics)
@@ -30,17 +30,12 @@ func (c *Consumer) Run(ctx context.Context) error {
 	go func() {
 		for {
 			if err := retry(10, sub); err != nil {
-				cerr <- err
+				log.Printf("failed to subscribe messages : %w", err)
 			}
 		}
 	}()
 
-	select {
-	case err := <-cerr:
-		return err
-	case <-ctx.Done():
-		return nil
-	}
+	<-ctx.Done()
 }
 
 func retry(attempts int, fn func() error) error {

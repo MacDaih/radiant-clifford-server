@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"time"
 
 	"webservice/internal/core/domain"
@@ -18,6 +19,7 @@ func RecordReportFunc(repo repository.Report) port.RecordReport {
 			return err
 		}
 
+		fmt.Printf("%v\n", r)
 		r.ReportedAt = time.Now().Unix()
 
 		return repo.InsertReport(ctx, r)
