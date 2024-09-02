@@ -86,7 +86,5 @@ func main() {
 			log.Println("closing webservice ...")
 			webservice.Close()
 		}
-
-		return
 	}
 }

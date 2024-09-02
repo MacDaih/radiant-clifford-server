@@ -21,11 +21,7 @@ func RecordReportFunc(repo repository.Report) port.RecordReport {
 
 		r.ReportedAt = time.Now().Unix()
 
-		if err := repo.InsertReport(ctx, r); err != nil {
-			fmt.Println(err)
-			return err
-		}
-		return nil
+		return epo.InsertReport(ctx, r)
 	}
 }
 
