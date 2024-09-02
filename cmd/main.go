@@ -58,7 +58,6 @@ func main() {
 		),
 	)
 
-	log.Println(config.GetTopics())
 	consumer := worker.NewConsumer(client, config.GetTopics())
 
 	go func() {

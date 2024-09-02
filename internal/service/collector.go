@@ -19,10 +19,13 @@ func RecordReportFunc(repo repository.Report) port.RecordReport {
 			return err
 		}
 
-		fmt.Printf("%v\n", r)
 		r.ReportedAt = time.Now().Unix()
 
-		return repo.InsertReport(ctx, r)
+		if err := repo.InsertReport(ctx, r); err != nil {
+			fmt.Println(err)
+			return err
+		}
+		return nil
 	}
 }
 
