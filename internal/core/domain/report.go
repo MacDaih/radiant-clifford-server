@@ -8,6 +8,7 @@ type Report struct {
 	Light      float64 `bson:"lux" json:"lux"`
 	Press      float64 `bson:"pressure" json:"pressure"`
 }
+
 type ReportSample struct {
 	Metrics Overview
 	Reports []Report

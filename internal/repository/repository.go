@@ -40,7 +40,7 @@ func NewReportRepository(name, dbHost, dbPort string) Report {
 }
 
 func (r *reportsRepo) GetReports(ctx context.Context, elapse int64) ([]domain.Report, error) {
-	client, err := database.ConnectDB(r.dbHost, r.dbPort)
+	client, err := database.ConnectDB(ctx, r.dbHost, r.dbPort)
 
 	if err != nil {
 		return nil, err
@@ -76,7 +76,7 @@ func (r *reportsRepo) GetReports(ctx context.Context, elapse int64) ([]domain.Re
 }
 
 func (r *reportsRepo) GetReportsFromRange(ctx context.Context, rge domain.TimeRange) ([]domain.Report, error) {
-	client, err := database.ConnectDB(r.dbHost, r.dbPort)
+	client, err := database.ConnectDB(ctx, r.dbHost, r.dbPort)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +119,7 @@ func (r *reportsRepo) InsertArchive(ctx context.Context, archive domain.Archive)
 
 func (r *reportsRepo) DeleteReports(ctx context.Context, rge domain.TimeRange) error {
 
-	client, err := database.ConnectDB(r.dbHost, r.dbPort)
+	client, err := database.ConnectDB(ctx, r.dbHost, r.dbPort)
 	if err != nil {
 		return err
 	}
@@ -135,7 +135,7 @@ func (r *reportsRepo) DeleteReports(ctx context.Context, rge domain.TimeRange) e
 }
 
 func (r *reportsRepo) GetArchive(ctx context.Context, ref string) (domain.Archive, error) {
-	client, err := database.ConnectDB(r.dbHost, r.dbPort)
+	client, err := database.ConnectDB(ctx, r.dbHost, r.dbPort)
 
 	if err != nil {
 		return domain.Archive{}, err

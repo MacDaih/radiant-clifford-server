@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine
+FROM golang:1.23-alpine AS builder
 
 ARG GITHUB_USERNAME
 ARG GITHUB_TOKEN
@@ -18,4 +18,10 @@ RUN go mod vendor
 RUN go mod download
 RUN go build -o main ./cmd
 
-CMD ["/go/src/ws/main"]
+# Run stage
+FROM alpine:latest
+
+WORKDIR /app
+COPY --from=builder /go/src/ws .
+
+CMD ["./main"]

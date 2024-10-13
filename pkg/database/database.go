@@ -22,12 +22,9 @@ var (
 	port = os.Getenv("DB_PORT")
 )
 
-func ConnectDB(host string, port string) (*mongo.Client, error) {
+func ConnectDB(ctx context.Context, host string, port string) (*mongo.Client, error) {
 	uri := fmt.Sprintf("mongodb://%s:%s", host, port)
 	clientopt := options.Client().SetAuth(authOpt).ApplyURI(uri)
-
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
 
 	client, err := mongo.Connect(ctx, clientopt)
 
@@ -43,19 +40,22 @@ func ConnectDB(host string, port string) (*mongo.Client, error) {
 }
 
 func Write(ctx context.Context, dbName string, collName string, args interface{}) error {
-	client, err := ConnectDB(host, port)
+	wctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	client, err := ConnectDB(wctx, host, port)
 
 	if err != nil {
 		return err
 	}
 
+	defer client.Disconnect(wctx)
+
 	coll := client.Database(dbName).Collection(collName)
 
-	_, err = coll.InsertOne(ctx, args)
+	if _, err := coll.InsertOne(wctx, args); err != nil {
+		return err
+	}
 
-	defer func() {
-		client.Disconnect(ctx)
-	}()
-
-	return err
+	return nil
 }

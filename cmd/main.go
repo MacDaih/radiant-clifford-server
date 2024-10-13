@@ -51,7 +51,10 @@ func main() {
 	client := sdk.NewClient(
 		config.GetServerAddr(),
 		15,
+		sdk.QoSOne,
+		900,
 		sdk.WithID(config.GetClientID()),
+		sdk.WithTimeout(120),
 		sdk.WithBasicCredentials(config.GetUserName(), config.GetUserPasswd()),
 		sdk.WithCallBack(
 			recordReport,
@@ -74,7 +77,6 @@ func main() {
 		}
 	case <-sysInt:
 		shutdown()
-		// TODO move webservice shutdown into its own package
 		log.Println("interrupt : service is shutting down")
 
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
