@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -31,6 +32,13 @@ func main() {
 	repo := repository.NewReportRepository(config.GetDBEnv())
 
 	recordReport := service.RecordReportFunc(repo)
+	reportWrapper := func(ctx context.Context, _ sdk.ContentType, payload []byte) error {
+		// if content != sdk.Json {
+		// 	return fmt.Errorf("unexpected %s content type", string(content))
+		// }
+		return recordReport(ctx, payload)
+	}
+
 	hdlr := handler.NewServiceHandler(repo)
 
 	httpError := make(chan error, 1)
@@ -57,7 +65,7 @@ func main() {
 		sdk.WithTimeout(120),
 		sdk.WithBasicCredentials(config.GetUserName(), config.GetUserPasswd()),
 		sdk.WithCallBack(
-			recordReport,
+			reportWrapper,
 		),
 	)
 
