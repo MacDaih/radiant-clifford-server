@@ -16,13 +16,14 @@ import (
 func RecordReportFunc(repo repository.Report) port.RecordReport {
 	return func(ctx context.Context, payload []byte) error {
 		var r domain.Report
+
+		fmt.Println(string(payload))
 		if err := json.Unmarshal(payload, &r); err != nil {
 			return err
 		}
 
 		r.ReportedAt = time.Now().Unix()
 
-		fmt.Println(string(payload))
 		return repo.InsertReport(ctx, r)
 	}
 }

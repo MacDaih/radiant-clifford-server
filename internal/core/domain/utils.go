@@ -12,7 +12,7 @@ const (
 
 	STR_TWENTY_FOUR = "last_day"
 	STR_TWELVE      = "last_twelve_hours"
-	STR_SIX         = "last_six_hrs"
+	STR_SIX         = "last_six_hours"
 	STR_HOUR        = "last_hour"
 	STR_THIRTY      = "last_thirthy_minutes"
 	STR_FIFHTEEN    = "last_fifthteen_minutes"

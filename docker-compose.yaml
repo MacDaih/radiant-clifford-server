@@ -29,6 +29,7 @@ services:
   radiant_db:
     image: "mongo:4.0"
     container_name: radiant-db
+    command: mongod --smallfiles
     ports:
       - "27017:27017"
     env_file: ".env"

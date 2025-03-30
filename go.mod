@@ -6,7 +6,7 @@ toolchain go1.22.5
 
 require (
 	github.com/gorilla/mux v1.8.0
-	github.com/macdaih/porter_go_sdk v0.0.0-20241213215037-a628dc30c2b9
+	github.com/macdaih/porter_go_sdk v0.0.0-20250312183816-4ddc184e7219
 	go.mongodb.org/mongo-driver v1.5.1
 )
 
