@@ -35,6 +35,7 @@ func main() {
 		// if content != sdk.Json {
 		// 	return fmt.Errorf("unexpected %s content type", string(content))
 		// }
+        fmt.Printf("DEBUG payload %s\n", string(payload))
 		return recordReport(ctx, payload)
 	}
 
