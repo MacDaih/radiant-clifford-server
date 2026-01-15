@@ -2,11 +2,11 @@ package domain
 
 type Report struct {
 	ReportedAt int64   `bson:"report_time" json:"time"`
-	BoardTemp  float64 `bson:"board_temp" json:"board_temp"`
+	BoardTemp  float64 `bson:"board_temp" json:"board_temp,omitzero"`
 	Temp       float64 `bson:"temperature" json:"temperature"`
 	Hum        float64 `bson:"humidity" json:"humidity"`
-	Light      float64 `bson:"lux" json:"lux"`
-	Press      float64 `bson:"pressure" json:"pressure"`
+	Light      float64 `bson:"lux" json:"lux,omitzero"`
+    Press      float64 `bson:"pressure" json:"pressure,omitzero"`
 }
 
 type ReportSample struct {

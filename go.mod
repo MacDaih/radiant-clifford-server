@@ -1,12 +1,12 @@
 module webservice
 
-go 1.22
+go 1.25
 
-toolchain go1.22.5
+toolchain go1.25.0
 
 require (
 	github.com/gorilla/mux v1.8.0
-	github.com/macdaih/porter_go_sdk v0.0.0-20250312183816-4ddc184e7219
+	github.com/macdaih/porter_go_sdk
 	go.mongodb.org/mongo-driver v1.5.1
 )
 

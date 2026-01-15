@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+    "fmt"
 	"log"
 	"net/http"
 	"os"
@@ -35,7 +36,6 @@ func main() {
 		// if content != sdk.Json {
 		// 	return fmt.Errorf("unexpected %s content type", string(content))
 		// }
-        fmt.Printf("DEBUG payload %s\n", string(payload))
 		return recordReport(ctx, payload)
 	}
 
@@ -46,8 +46,9 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/data/reports/{range}", hdlr.GetReportsFrom).Methods("GET")
-	router.HandleFunc("/data/by_date/{date}", hdlr.GetReportsByDate).Methods("GET")
+	router.HandleFunc("/data/weather/reports/{range}", hdlr.GetReportsFrom).Methods("GET")
+	router.HandleFunc("/data/weather/by_date/{date}", hdlr.GetReportsByDate).Methods("GET")
+	router.HandleFunc("/data/home", hdlr.GetHomeData).Methods("GET")
 
 	webservice := http.Server{
 		Addr:    config.GetPort(),
