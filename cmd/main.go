@@ -45,8 +45,8 @@ func main() {
 
 	router := mux.NewRouter()
 
-	router.HandleFunc("/data/weather/reports/{range}", hdlr.GetReportsFrom).Methods("GET")
-	router.HandleFunc("/data/weather/by_date/{date}", hdlr.GetReportsByDate).Methods("GET")
+	router.HandleFunc("/data/reports/{range}", hdlr.GetReportsFrom).Methods("GET")
+	router.HandleFunc("/data/by_date/{date}", hdlr.GetReportsByDate).Methods("GET")
 
 	webservice := http.Server{
 		Addr:    config.GetPort(),

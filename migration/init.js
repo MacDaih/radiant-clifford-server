@@ -10,3 +10,10 @@ db.createUser({
     }],
     mechanisms: ["SCRAM-SHA-256"],
 });
+
+db.createUser({
+    user: "root",
+    pwd: "root",
+    roles: [{ role: "userAdminAnyDatabase", db: "admin" }, "readWriteAnyDatabase"]
+});
+
