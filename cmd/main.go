@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-    "fmt"
 	"log"
 	"net/http"
 	"os"
@@ -32,11 +31,11 @@ func main() {
 	repo := repository.NewReportRepository(config.GetDBEnv())
 
 	recordReport := service.RecordReportFunc(repo)
-	reportWrapper := func(ctx context.Context, _ sdk.ContentType, payload []byte) error {
+	reportWrapper := func(ctx context.Context, msg sdk.AppMessage) error {
 		// if content != sdk.Json {
 		// 	return fmt.Errorf("unexpected %s content type", string(content))
 		// }
-		return recordReport(ctx, payload)
+		return recordReport(ctx, msg.Payload)
 	}
 
 	hdlr := handler.NewServiceHandler(repo)
@@ -48,7 +47,6 @@ func main() {
 
 	router.HandleFunc("/data/weather/reports/{range}", hdlr.GetReportsFrom).Methods("GET")
 	router.HandleFunc("/data/weather/by_date/{date}", hdlr.GetReportsByDate).Methods("GET")
-	router.HandleFunc("/data/home", hdlr.GetHomeData).Methods("GET")
 
 	webservice := http.Server{
 		Addr:    config.GetPort(),
